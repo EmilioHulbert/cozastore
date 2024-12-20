@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Slider with Manual Buttons</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+        }
+            .slider {
+        width: 1903px; /* Fixed width for the banner */
+        height: 501px; /* Fixed height for the banner */
+        margin: 50px auto; /* Centering the slider horizontally */
+        position: relative;
+        overflow: hidden; /* Ensures images don't overflow outside the slider */
+    }
+
+    .slides {
+        display: flex;
+        width: 300%; /* Maintain the width for sliding */
+        transition: transform 0.6s ease;
+    }
+
+    .slides img {
+        width: 1903px; /* Image width matches the banner */
+        height: 501px; /* Image height matches the banner */
+        object-fit: cover; /* Ensures the image fills the banner dimensions */
+    }
+
+        .slider-buttons {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+            padding: 0 10px;
+        }
+        .slider-buttons button {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="slider">
+    <div class="slides">
+        <!-- Replace these image sources with local images -->
+        <img src="images/image1.jpg" alt="Image 1">
+        <img src="images/image2.jpg" alt="Image 2">
+        <img src="images/image3.jpg" alt="Image 3">
+    </div>
+    
+    <!-- Navigation Buttons -->
+    <div class="slider-buttons">
+        <button id="prev">&#10094;</button>
+        <button id="next">&#10095;</button>
+    </div>
+</div>
+
+<script>
+    const slides = document.querySelector('.slides');
+    const prevButton = document.getElementById('prev');
+    const nextButton = document.getElementById('next');
+    let currentIndex = 0;
+    const totalSlides = document.querySelectorAll('.slides img').length;
+
+    // Set interval to automatically slide every 3 seconds
+    let autoSlide = setInterval(() => moveToNextSlide(), 3000);
+
+    // Function to move to next slide
+    function moveToNextSlide() {
+        currentIndex = (currentIndex + 1) % totalSlides;
+        updateSlidePosition();
+    }
+
+    // Function to move to previous slide
+    function moveToPrevSlide() {
+        currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+        updateSlidePosition();
+    }
+
+    // Update slide position
+    function updateSlidePosition() {
+        const slideWidth = document.querySelector('.slider').clientWidth;
+        slides.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+    }
+
+    // Event listeners for buttons
+    nextButton.addEventListener('click', () => {
+        clearInterval(autoSlide); // Stop auto sliding when manually clicked
+        moveToNextSlide();
+        autoSlide = setInterval(() => moveToNextSlide(), 3000); // Restart the auto slide
+    });
+
+    prevButton.addEventListener('click', () => {
+        clearInterval(autoSlide); // Stop auto sliding when manually clicked
+        moveToPrevSlide();
+        autoSlide = setInterval(() => moveToNextSlide(), 3000); // Restart the auto slide
+    });
+
+    // Adjust the slide position when the window resizes
+    window.addEventListener('resize', updateSlidePosition);
+</script>
+
+</body>
+</html>
